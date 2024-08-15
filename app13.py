@@ -5,14 +5,11 @@ import seaborn as sns
 import plotly.express as px
 import matplotlib.pyplot as plt
 
-# Caminho para a imagem
-image_path = '/Users/luizbueno/Downloads/yamaha/yamaha.png'
+# URL da imagem no GitHub
+image_url = 'https://raw.githubusercontent.com/lcbueno/streamlit/main/yamaha.png'
 
-# Verificar se o arquivo existe
-if os.path.exists(image_path):
-    st.sidebar.image(image_path, use_column_width=True)
-else:
-    st.sidebar.error("Imagem não encontrada no caminho especificado.")
+# Exibir a imagem na barra lateral
+st.sidebar.image(image_url, use_column_width=True)
 
 # Permitir o upload do dataset CSV
 uploaded_file = st.file_uploader("Escolha um arquivo CSV", type="csv")
@@ -311,3 +308,4 @@ if uploaded_file is not None:
             st.plotly_chart(fig7)
 else:
     st.error("Por favor, faça o upload de um arquivo CSV.")
+
