@@ -11,31 +11,33 @@ image_path = 'https://raw.githubusercontent.com/lcbueno/streamlit/main/yamaha.pn
 # Verificar se o arquivo existe
 if os.path.exists(image_path):
     st.sidebar.image(image_path, use_column_width=True)
-else:
-    st.sidebar.error("Imagem não encontrada no caminho especificado.")
 
 # Carregar o dataset com a codificação correta
-df = pd.read_csv('/Users/luizbueno/Downloads/yamaha/dados/dataset.csv', encoding='ISO-8859-1')
+uploaded_file = st.sidebar.file_uploader("Escolha um arquivo CSV", type="csv")
+if uploaded_file is not None:
+    df = pd.read_csv(uploaded_file, encoding='ISO-8859-1')
 
-# Converter a coluna "Date" para datetime sem exibir a mensagem de aviso
-df['Date'] = pd.to_datetime(df['Date'], dayfirst=True, errors='coerce')
+    # Converter a coluna "Date" para datetime sem exibir a mensagem de aviso
+    df['Date'] = pd.to_datetime(df['Date'], dayfirst=True, errors='coerce')
 
-# Remover qualquer linha com datas inválidas (NaT)
-df = df.dropna(subset=['Date'])
+    # Remover qualquer linha com datas inválidas (NaT)
+    df = df.dropna(subset=['Date'])
 
-# Aplicar filtros (sem mostrar no layout)
-regions = df['Dealer_Region'].unique()
-min_date = df['Date'].min().date()
-max_date = df['Date'].max().date()
-selected_region = regions  # Aplica automaticamente todas as regiões
-selected_dates = [min_date, max_date]  # Aplica automaticamente o intervalo completo
+    # Aplicar filtros (sem mostrar no layout)
+    regions = df['Dealer_Region'].unique()
+    min_date = df['Date'].min().date()
+    max_date = df['Date'].max().date()
+    selected_region = regions  # Aplica automaticamente todas as regiões
+    selected_dates = [min_date, max_date]  # Aplica automaticamente o intervalo completo
 
-# Converter selected_dates para datetime64
-selected_dates = pd.to_datetime(selected_dates)
+    # Converter selected_dates para datetime64
+    selected_dates = pd.to_datetime(selected_dates)
 
-# Filtrando o DataFrame para todas as páginas
-filtered_df = df[(df['Dealer_Region'].isin(selected_region)) & 
-                 (df['Date'].between(selected_dates[0], selected_dates[1]))]
+    # Filtrando o DataFrame para todas as páginas
+    filtered_df = df[(df['Dealer_Region'].isin(selected_region)) & 
+                     (df['Date'].between(selected_dates[0], selected_dates[1]))]
+
+
 
 # Estilo da barra lateral
 st.markdown("""
