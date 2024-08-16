@@ -75,7 +75,7 @@ if uploaded_file is not None:
 
     # Inicializar o estado da sessão para a página principal
     if 'page' not in st.session_state:
-        st.session_state['page'] = 'Visão Geral Dados'
+        st.session_state['page'] = 'Overview Data'
 
     # Funções para definir a página principal
     def set_page(page):
