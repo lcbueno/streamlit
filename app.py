@@ -58,13 +58,15 @@ if st.sidebar.button("Vehicle Sales"):
 if st.sidebar.button("Customer Profile"):
     st.session_state['page'] = 'Perfil do Cliente'
 
+# Botão de upload do arquivo CSV abaixo dos botões de seleção de página
+uploaded_file = st.sidebar.file_uploader("Escolha um arquivo CSV", type="csv")
+
 # Inicializar o estado da sessão para a página principal
 if 'page' not in st.session_state:
     st.session_state['page'] = 'Overview Data'
 
-# Carregar o dataset com a codificação correta
-uploaded_file = st.file_uploader("Escolha um arquivo CSV", type="csv")
 if uploaded_file is not None:
+    # Carregar o dataset com a codificação correta
     df = pd.read_csv(uploaded_file, encoding='ISO-8859-1')
 
     # Converter a coluna "Date" para datetime sem exibir a mensagem de aviso
