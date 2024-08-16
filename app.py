@@ -11,9 +11,34 @@ image_path = 'https://raw.githubusercontent.com/lcbueno/streamlit/main/yamaha.pn
 # Exibir a imagem na barra lateral
 st.sidebar.image(image_path, use_column_width=True)
 
-# Carregar o dataset com a codificação correta
+# Sidebar para upload do arquivo CSV
 uploaded_file = st.sidebar.file_uploader("Escolha um arquivo CSV", type="csv")
+
+# Inicializar o estado da sessão para a página principal
+if 'page' not in st.session_state:
+    st.session_state['page'] = 'Overview Data'
+
+# Funções para definir a página principal
+def set_page(page):
+    st.session_state['page'] = page
+
+# Sidebar para seleção da página principal
+st.sidebar.title("Analytical Dashboard")
+if st.sidebar.button("Overview Data"):
+    set_page('Overview')
+if st.sidebar.button("Regional Sales"):
+    set_page('Regional Sales')
+if st.sidebar.button("Vehicle Sales"):
+    set_page('Vendas Carros')
+if st.sidebar.button("Customer Profile"):
+    set_page('Perfil do Cliente')
+
+# Recuperar a página principal atual do estado da sessão
+page = st.session_state['page']
+
+# Verificar se o arquivo foi carregado
 if uploaded_file is not None:
+    # Carregar o dataset com a codificação correta
     df = pd.read_csv(uploaded_file, encoding='ISO-8859-1')
 
     # Converter a coluna "Date" para datetime sem exibir a mensagem de aviso
@@ -35,69 +60,6 @@ if uploaded_file is not None:
     # Filtrando o DataFrame para todas as páginas
     filtered_df = df[(df['Dealer_Region'].isin(selected_region)) & 
                      (df['Date'].between(selected_dates[0], selected_dates[1]))]
-
-    # Estilo da barra lateral
-    st.markdown("""
-        <style>
-            .sidebar .sidebar-content {
-                background-color: #262730;
-                padding: 10px;
-            }
-            .sidebar .sidebar-content h2 {
-                color: white;
-                font-size: 24px;
-                margin-bottom: 10px;
-            }
-            .stButton > button {
-                font-size: 18px;
-                color: white;
-                background-color: #1F77B4;
-                border: none;
-                padding: 10px 20px;
-                margin-bottom: 10px;
-                width: 100%;
-                text-align: left;
-                border-radius: 5px;
-            }
-            .stButton > button:hover {
-                background-color: #0073e6;
-            }
-            .stButton > button:focus {
-                background-color: #005bb5;
-            }
-            .stContainer > div {
-                display: flex;
-                justify-content: space-around;
-                margin-bottom: 20px;
-            }
-        </style>
-    """, unsafe_allow_html=True)
-
-    # Inicializar o estado da sessão para a página principal
-    if 'page' not in st.session_state:
-        st.session_state['page'] = 'Overview Data'
-
-    # Funções para definir a página principal
-    def set_page(page):
-        st.session_state['page'] = page
-
-    # Sidebar para seleção da página principal
-    st.sidebar.title("Analytical Dashboard")
-    if st.sidebar.button("Overview Data"):
-        set_page('Overview')
-    if st.sidebar.button("Regional Sales"):
-        set_page('Regional Sales')
-    if st.sidebar.button("Vehicle Sales"):
-        set_page('Vendas Carros')
-    if st.sidebar.button("Customer Profile"):
-        set_page('Perfil do Cliente')
-
-    # Recuperar a página principal atual do estado da sessão
-    page = st.session_state['page']
-
-    # Função para exibir o gráfico selecionado
-    def show_chart(chart_type):
-        st.session_state['chart_type'] = chart_type
 
     # Página: Visão Geral Dados
     if page == "Overview":
@@ -306,5 +268,7 @@ if uploaded_file is not None:
                           barmode='group')
 
             st.plotly_chart(fig7)
+
 else:
     st.sidebar.warning("Por favor, carregue um arquivo CSV para começar.")
+    st.write("Por favor, carregue um arquivo CSV usando a barra lateral para visualizar os dados.")
