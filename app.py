@@ -1,4 +1,3 @@
-import os
 import pandas as pd
 import streamlit as st
 import seaborn as sns
@@ -8,11 +7,8 @@ import matplotlib.pyplot as plt
 # Caminho para a imagem
 image_path = 'https://raw.githubusercontent.com/lcbueno/streamlit/main/yamaha.png'
 
-# Verificar se o arquivo existe
-if os.path.exists(image_path):
-    st.sidebar.image(image_path, use_column_width=True)
-else:
-    st.sidebar.error("Imagem não encontrada no caminho especificado.")
+# Exibir a imagem na barra lateral
+st.sidebar.image(image_path, use_column_width=True)
 
 # Estilo da barra lateral (mantendo a cor azul nos botões)
 st.markdown("""
@@ -193,7 +189,7 @@ if uploaded_file is not None:
                 plt.ylabel('Number of Sales', fontsize=14)
                 plt.grid(True, color='gray', linestyle='--', linewidth=0.5)
                 plt.xticks(fontsize=12)
-                plt.yticks(fontsize=12)
+                plt.yticks(fontsize(12))
                 plt.gca().spines['top'].set_color('none')
                 plt.gca().spines['right'].set_color('none')
                 plt.gca().set_facecolor('white')
@@ -299,3 +295,4 @@ if uploaded_file is not None:
             st.plotly_chart(fig7)
 else:
     st.warning("Por favor, carregue um arquivo CSV para visualizar os dados.")
+
