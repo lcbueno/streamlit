@@ -6,7 +6,7 @@ import plotly.express as px
 import matplotlib.pyplot as plt
 
 # Caminho para a imagem
-image_path = 'https://raw.githubusercontent.com/lcbueno/streamlit/main/yamaha.png'
+image_path = 'https://github.com/lcbueno/streamlit/blob/main/yamaha.png'
 
 # Verificar se o arquivo existe
 if os.path.exists(image_path):
