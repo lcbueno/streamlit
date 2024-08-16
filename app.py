@@ -6,13 +6,50 @@ import plotly.express as px
 import matplotlib.pyplot as plt
 
 # Caminho para a imagem
-image_path = 'https://github.com/lcbueno/streamlit/blob/main/yamaha.png'
+image_path = 'https://raw.githubusercontent.com/lcbueno/streamlit/main/yamaha.png'
 
 # Verificar se o arquivo existe
 if os.path.exists(image_path):
     st.sidebar.image(image_path, use_column_width=True)
 else:
     st.sidebar.error("Imagem não encontrada no caminho especificado.")
+
+# Estilo da barra lateral (mantendo a cor azul nos botões)
+st.markdown("""
+    <style>
+        .sidebar .sidebar-content {
+            background-color: #262730;
+            padding: 10px;
+        }
+        .sidebar .sidebar-content h2 {
+            color: white;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .stButton > button {
+            font-size: 18px;
+            color: white;
+            background-color: #1F77B4;
+            border: none;
+            padding: 10px 20px;
+            margin-bottom: 10px;
+            width: 100%;
+            text-align: left;
+            border-radius: 5px;
+        }
+        .stButton > button:hover {
+            background-color: #0073e6;
+        }
+        .stButton > button:focus {
+            background-color: #005bb5;
+        }
+        .stContainer > div {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
 # Sidebar para seleção da página principal
 st.sidebar.title("Analytical Dashboard")
