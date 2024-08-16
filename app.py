@@ -8,37 +8,30 @@ import matplotlib.pyplot as plt
 # Caminho para a imagem
 image_path = 'https://raw.githubusercontent.com/lcbueno/streamlit/main/yamaha.png'
 
-# Exibir a imagem na barra lateral
-st.sidebar.image(image_path, use_column_width=True)
+# Verificar se o arquivo existe
+if os.path.exists(image_path):
+    st.sidebar.image(image_path, use_column_width=True)
+else:
+    st.sidebar.error("Imagem não encontrada no caminho especificado.")
 
-# Sidebar para upload do arquivo CSV
-uploaded_file = st.sidebar.file_uploader("Escolha um arquivo CSV", type="csv")
+# Sidebar para seleção da página principal
+st.sidebar.title("Analytical Dashboard")
+if st.sidebar.button("Overview Data"):
+    st.session_state['page'] = 'Overview'
+if st.sidebar.button("Regional Sales"):
+    st.session_state['page'] = 'Regional Sales'
+if st.sidebar.button("Vehicle Sales"):
+    st.session_state['page'] = 'Vendas Carros'
+if st.sidebar.button("Customer Profile"):
+    st.session_state['page'] = 'Perfil do Cliente'
 
 # Inicializar o estado da sessão para a página principal
 if 'page' not in st.session_state:
     st.session_state['page'] = 'Overview Data'
 
-# Funções para definir a página principal
-def set_page(page):
-    st.session_state['page'] = page
-
-# Sidebar para seleção da página principal
-st.sidebar.title("Analytical Dashboard")
-if st.sidebar.button("Overview Data"):
-    set_page('Overview')
-if st.sidebar.button("Regional Sales"):
-    set_page('Regional Sales')
-if st.sidebar.button("Vehicle Sales"):
-    set_page('Vendas Carros')
-if st.sidebar.button("Customer Profile"):
-    set_page('Perfil do Cliente')
-
-# Recuperar a página principal atual do estado da sessão
-page = st.session_state['page']
-
-# Verificar se o arquivo foi carregado
+# Carregar o dataset com a codificação correta
+uploaded_file = st.file_uploader("Escolha um arquivo CSV", type="csv")
 if uploaded_file is not None:
-    # Carregar o dataset com a codificação correta
     df = pd.read_csv(uploaded_file, encoding='ISO-8859-1')
 
     # Converter a coluna "Date" para datetime sem exibir a mensagem de aviso
@@ -62,7 +55,7 @@ if uploaded_file is not None:
                      (df['Date'].between(selected_dates[0], selected_dates[1]))]
 
     # Página: Visão Geral Dados
-    if page == "Overview":
+    if st.session_state['page'] == "Overview":
         st.title('Dashboard Yamaha - Overview Data')
 
         # Inicializar o estado da sessão para os gráficos se ainda não foi definido
@@ -73,13 +66,13 @@ if uploaded_file is not None:
         col1, col2, col3 = st.columns(3)
         with col1:
             if st.button("Overview"):
-                show_chart("Overview")
+                st.session_state['chart_type'] = "Overview"
         with col2:
             if st.button("Unique Values"):
-                show_chart("Unique Values")
+                st.session_state['chart_type'] = "Unique Values"
         with col3:
             if st.button("Download Dataset"):
-                show_chart("Download Dataset")
+                st.session_state['chart_type'] = "Download Dataset"
 
         # Exibir o gráfico com base na escolha do botão
         if st.session_state['chart_type'] == 'Overview':
@@ -100,7 +93,7 @@ if uploaded_file is not None:
             )
 
     # Página: Vendas Regionais
-    elif page == "Regional Sales":
+    elif st.session_state['page'] == "Regional Sales":
         st.title('Dashboard Yamaha - Regional Sales')
 
         # Inicializar o estado da sessão para os gráficos se ainda não foi definido
@@ -111,19 +104,19 @@ if uploaded_file is not None:
         col1, col2, col3, col4, col5 = st.columns(5)
         with col1:
             if st.button("Sales by Region"):
-                show_chart("Distribuição de Vendas por Região")
+                st.session_state['chart_type'] = "Distribuição de Vendas por Região"
         with col2:
             if st.button("Sales Evolution Over Time"):
-                show_chart("Evolução de Vendas")
+                st.session_state['chart_type'] = "Evolução de Vendas"
         with col3:
             if st.button("Sales Evolution by Region"):
-                show_chart("Evolução de Vendas por Região")
+                st.session_state['chart_type'] = "Evolução de Vendas por Região"
         with col4:
             if st.button("Region x Vehicle Model"):
-                show_chart("Séries Temporais por Região e Modelo")
+                st.session_state['chart_type'] = "Séries Temporais por Região e Modelo"
         with col5:
             if st.button("Product Mix Heatmap"):
-                show_chart("Heatmap do Mix de Produtos")
+                st.session_state['chart_type'] = "Heatmap do Mix de Produtos"
 
         # Exibir o gráfico com base na escolha do botão
         if st.session_state['chart_type'] == 'Distribuição de Vendas por Região':
@@ -190,7 +183,7 @@ if uploaded_file is not None:
             st.pyplot(plt)
 
     # Página: Vendas Carros
-    elif page == "Vendas Carros":
+    elif st.session_state['page'] == "Vendas Carros":
         st.title('Dashboard Yamaha - Vehicle Sales')
 
         # Inicializar o estado da sessão para os gráficos se ainda não foi definido
@@ -201,13 +194,13 @@ if uploaded_file is not None:
         col1, col2, col3 = st.columns(3)
         with col1:
             if st.button("Average Revenue by Car Type"):
-                show_chart("Receita Média por Tipo de Carro")
+                st.session_state['chart_type'] = "Receita Média por Tipo de Carro"
         with col2:
             if st.button("Top 10 Companies by Revenue"):
-                show_chart("Top 10 Empresas por Receita")
+                st.session_state['chart_type'] = "Top 10 Empresas por Receita"
         with col3:
             if st.button("Transmission Distribution by Engine"):
-                show_chart("Distribuição de Transmissão por Motor")
+                st.session_state['chart_type'] = "Distribuição de Transmissão por Motor"
 
         # Exibir o gráfico com base na escolha do botão
         if st.session_state['chart_type'] == 'Receita Média por Tipo de Carro':
@@ -226,7 +219,7 @@ if uploaded_file is not None:
             st.plotly_chart(fig6)
 
     # Página: Perfil do Cliente
-    elif page == "Perfil do Cliente":
+    elif st.session_state['page'] == "Perfil do Cliente":
         st.title('Dashboard Yamaha - Customer Profile')
 
         # Inicializar o estado da sessão para os gráficos se ainda não foi definido
@@ -237,11 +230,10 @@ if uploaded_file is not None:
         col1, col2, col3 = st.columns(3)
         with col1:
             if st.button("Gender Distribution by Region"):
-                show_chart("Distribuição de Gênero por Região")
+                st.session_state['chart_type'] = "Distribuição de Gênero por Região"
         with col2:
             if st.button("Top 10 Models by Gender"):
-                show_chart("Top 10 Modelos por Gênero")
-
+                st.session_state['chart_type'] = "Top 10 Modelos por Gênero"
 
         # Exibir o gráfico com base na escolha do botão
         if st.session_state['chart_type'] == 'Distribuição de Gênero por Região':
@@ -268,7 +260,5 @@ if uploaded_file is not None:
                           barmode='group')
 
             st.plotly_chart(fig7)
-
 else:
-    st.sidebar.warning("Por favor, carregue um arquivo CSV para começar.")
-    st.write("Por favor, carregue um arquivo CSV usando a barra lateral para visualizar os dados.")
+    st.warning("Por favor, carregue um arquivo CSV para visualizar os dados.")
