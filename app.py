@@ -59,7 +59,7 @@ if st.sidebar.button("Customer Profile"):
     st.session_state['page'] = 'Perfil do Cliente'
 
 # Botão de upload do arquivo CSV abaixo dos botões de seleção de página
-uploaded_file = st.sidebar.file_uploader("Escolha um arquivo CSV", type="csv")
+uploaded_file = st.sidebar.file_uploader("Choose a CSV file", type="csv")
 
 # Inicializar o estado da sessão para a página principal
 if 'page' not in st.session_state:
